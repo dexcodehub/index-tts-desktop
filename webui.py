@@ -160,7 +160,22 @@ def gen_single(emo_control_method,prompt, text,
                        verbose=cmd_args.verbose,
                        max_text_tokens_per_segment=int(max_text_tokens_per_segment),
                        **kwargs)
-    return gr.update(value=output,visible=True), gr.update(value=output_path, visible=True)  # 返回音频文件和文件路径
+    
+    # 确保返回正确的音频文件路径
+    if output is None:
+        print("Warning: TTS inference returned None")
+        return gr.update(value=None, visible=True)
+    elif isinstance(output, str):
+        # 如果返回的是文件路径，直接使用
+        print(f"Generated audio file: {output}")
+        return gr.update(value=output, visible=True)
+    elif isinstance(output, tuple) and len(output) == 2:
+        # 如果返回的是 (sampling_rate, wav_data) 元组，直接使用
+        print(f"Generated audio data: sampling_rate={output[0]}, data_shape={output[1].shape}")
+        return gr.update(value=output, visible=True)
+    else:
+        print(f"Unexpected output format: {type(output)}")
+        return gr.update(value=None, visible=True)
 
 def update_prompt_audio():
     update_button = gr.update(interactive=True)
@@ -194,7 +209,6 @@ with gr.Blocks(title="IndexTTS Demo") as demo:
                 input_text_single = gr.TextArea(label=i18n("文本"),key="input_text_single", placeholder=i18n("请输入目标文本"), info=f"{i18n('当前模型版本')}{tts.model_version or '1.0'}")
                 gen_button = gr.Button(i18n("生成语音"), key="gen_button",interactive=True)
             output_audio = gr.Audio(label=i18n("生成结果"), visible=True,key="output_audio")
-            download_button = gr.File(label=i18n("下载音频"), visible=False, key="download_button")  # 添加下载按钮
 
         experimental_checkbox = gr.Checkbox(label=i18n("显示实验功能"), value=False)
 
@@ -434,7 +448,9 @@ with gr.Blocks(title="IndexTTS Demo") as demo:
                              max_text_tokens_per_segment,
                              *advanced_params,
                      ],
-                     outputs=[output_audio, download_button])  # 修改输出以包含下载按钮
+                     outputs=[output_audio])
+
+
 
 if __name__ == "__main__":
     demo.queue(20)
