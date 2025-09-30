@@ -1,3 +1,4 @@
+import uv
 
 
 <div align="center">
@@ -398,6 +399,14 @@ For more detailed information, see [README_INDEXTTS_1_5](archive/README_INDEXTTS
 or visit the IndexTTS1 repository at <a href="https://github.com/index-tts/index-tts/tree/v1.5.0">index-tts:v1.5.0</a>.
 
 
+## 📚 API Documentation
+
+For detailed information about using IndexTTS programmatically, please refer to our API documentation:
+
+- [API Reference](docs/API.md) - Complete API reference with parameter descriptions
+- [API Usage Examples](docs/API_Usage_Examples.md) - Practical examples for all API interfaces
+- [HTTP API](docs/HTTP_API.md) - HTTP API interface for web integration
+
 ## Our Releases and Demos
 
 ### IndexTTS2: [[Paper]](https://arxiv.org/abs/2506.21619); [[Demo]](https://index-tts.github.io/index-tts2.github.io/); [[ModelScope]](https://modelscope.cn/studios/IndexTeam/IndexTTS-2-Demo); [[HuggingFace]](https://huggingface.co/spaces/IndexTeam/IndexTTS-2-Demo)
@@ -469,4 +478,5 @@ IndexTTS:
   doi={10.48550/arXiv.2502.05512},
   url={https://arxiv.org/abs/2502.05512}
 }
-```
+
+uv run webui.py

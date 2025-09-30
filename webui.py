@@ -160,7 +160,7 @@ def gen_single(emo_control_method,prompt, text,
                        verbose=cmd_args.verbose,
                        max_text_tokens_per_segment=int(max_text_tokens_per_segment),
                        **kwargs)
-    return gr.update(value=output,visible=True)
+    return gr.update(value=output,visible=True), gr.update(value=output_path, visible=True)  # 返回音频文件和文件路径
 
 def update_prompt_audio():
     update_button = gr.update(interactive=True)
@@ -194,6 +194,7 @@ with gr.Blocks(title="IndexTTS Demo") as demo:
                 input_text_single = gr.TextArea(label=i18n("文本"),key="input_text_single", placeholder=i18n("请输入目标文本"), info=f"{i18n('当前模型版本')}{tts.model_version or '1.0'}")
                 gen_button = gr.Button(i18n("生成语音"), key="gen_button",interactive=True)
             output_audio = gr.Audio(label=i18n("生成结果"), visible=True,key="output_audio")
+            download_button = gr.File(label=i18n("下载音频"), visible=False, key="download_button")  # 添加下载按钮
 
         experimental_checkbox = gr.Checkbox(label=i18n("显示实验功能"), value=False)
 
@@ -433,9 +434,7 @@ with gr.Blocks(title="IndexTTS Demo") as demo:
                              max_text_tokens_per_segment,
                              *advanced_params,
                      ],
-                     outputs=[output_audio])
-
-
+                     outputs=[output_audio, download_button])  # 修改输出以包含下载按钮
 
 if __name__ == "__main__":
     demo.queue(20)
